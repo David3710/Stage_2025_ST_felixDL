@@ -14,15 +14,14 @@ class Client : public QObject
 
 public:
     Client();
+    void envoiTexte( const std::string& s);
 
 private slots:
     void lireTexte();
     void afficherErreur(QAbstractSocket::SocketError socketError);
 
 private:
-    void envoiTexte( const std::string& s);
-    void envoiTrame();
-
+    QString constructionTrame(std::string message);
 
 private:
     QTcpSocket *m_socket_client;

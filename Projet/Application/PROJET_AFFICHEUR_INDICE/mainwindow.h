@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "client.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -16,6 +17,15 @@ public:
     ~MainWindow();
 
 private:
+    void ajoutVitesseDefilement(QString &trame);
+    void ajoutPolice(QString &trame);
+    void ajoutCouleur(QString &trame);
+
+private slots:
+    void on_envoiTrame_clicked();
+
+private:
+    Client m_client;
     Ui::MainWindow *ui;
 };
 #endif // MAINWINDOW_H

@@ -1,4 +1,3 @@
-
 #include <QtNetwork>
 #include <QThread>
 #include <iostream>
@@ -32,8 +31,6 @@ Client::Client()
     // connexion au serveur sur le port 53000
     m_tcpSocket->connectToHost( QHostAddress("10.16.25.211").toString(),1470 );
     //QString trame = "<ID01><L1><PA><FE><MA><WC><FE>messageeea7E<E>";
-    QString message = "";
-    envoiTexte("<ID01><L1><PA><FE><MA><WC><FE>Ca marche !67<E>");
 }
 
 //###############################################################################################################
@@ -78,6 +75,11 @@ void Client::afficherErreur(QAbstractSocket::SocketError socketError)
     }
 }
 
+QString Client::constructionTrame(std::string message)
+{
+
+}
+
 void Client::envoiTexte(const std::string &s)
 {
     std::cout << "Envoi de : " << s << std::endl;
@@ -98,16 +100,5 @@ void Client::envoiTexte(const std::string &s)
 
     m_tcpSocket->write(block);
 }
-
-void Client::envoiTrame()
-{
-    std::cout << "Envoyez une trame" << std::endl;
-    std::string trame;
-    std::cin >> trame;
-    envoiTexte(trame);
-    envoiTrame();
-}
-
-
 
 
