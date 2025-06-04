@@ -53,6 +53,6 @@ void MainWindow::on_envoiTrame_clicked()
 
     std::cout << trame.toStdString() << std::endl;
 
-    //m_client.envoiTexte();
+    m_client.envoiTexte(trame.toStdString());
     //ui->texteMessage->textEdited("");
 }
