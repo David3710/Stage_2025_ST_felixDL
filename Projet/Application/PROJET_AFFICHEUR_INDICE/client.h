@@ -21,7 +21,8 @@ private slots:
     void afficherErreur(QAbstractSocket::SocketError socketError);
 
 private:
-    QString constructionTrame(std::string message);
+    QString constructionTrame(std::string t);
+    QString calculChecksum(std::string t);
 
 private:
     QTcpSocket *m_socket_client;

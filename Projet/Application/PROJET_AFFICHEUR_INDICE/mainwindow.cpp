@@ -56,3 +56,101 @@ void MainWindow::on_envoiTrame_clicked()
     m_client.envoiTexte(trame.toStdString());
     //ui->texteMessage->textEdited("");
 }
+/*
+void MainWindow::rechercher()
+{
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("../PROJET_AFFICHEUR_INDICE/indice.db");
+
+    if( ! db.open() )
+        std::cout << "La base de données n'a pas été ouverte" << std::endl;
+    else
+    {
+        QSqlQuery query;
+
+        QString requete("SELECT id, nom FROM indice WHERE 1");
+
+        std::cout << requete.toStdString() << std::endl;
+        query.prepare( requete );
+
+        if( !query.exec() )
+        {
+            // Error Handling, check query.lastError(), probably return
+        }
+
+        afficherResultat(query);
+
+        db.close();
+    }
+}
+
+void MainWindow::afficherResultat( QSqlQuery query )
+{
+    QSqlRecord record = query.record();
+
+    ui->reponseTable->clear(); // on efface toute la table
+    ui->reponseTable->setRowCount(0); // on enlève toutes les lignes
+    ui->reponseTable->setColumnCount( record.count() ); // on initialise le nombre de colonne de la table de réponse
+
+    // affichage des titres de colonnes
+    for ( int colonne = 0; colonne != record.count(); ++colonne )
+        ui->reponseTable->setHorizontalHeaderItem(colonne, new QTableWidgetItem(record.fieldName(colonne)) );
+
+    // ajout des lignes
+    int ligne = 0;
+    while( query.next() )
+    {
+        ui->reponseTable->insertRow(ligne); // on ajoute une ligne
+
+        // pour chaque colonne, on ajoute la valeur
+        for ( int colonne = 0; colonne != record.count(); ++colonne )
+        {
+            QString valeur = query.value( colonne ).toString(); // récupération de la valeur
+            ui->reponseTable->setItem(ligne, colonne, new QTableWidgetItem(valeur) ); // ajout de la valeur dans la table
+        }
+
+        ligne++;
+    }
+}
+*/
+//------------------------------------------------
+// Méthodes des boutons du menu principal
+
+void MainWindow::on_versGestion_clicked()
+{
+    ui->index->hide();
+    ui->gestion->show();
+}
+
+void MainWindow::on_versEnvoi_clicked()
+{
+    ui->index->hide();
+    ui->envoi->show();
+}
+
+void MainWindow::on_versAide_clicked()
+{
+    ui->index->hide();
+    ui->aide->show();
+}
+
+//------------------------------------------------
+// Méthodes des boutons de retour en arrière
+
+void MainWindow::on_backGestion_clicked()
+{
+    ui->gestion->hide();
+    ui->index->show();
+}
+
+void MainWindow::on_backEnvoi_clicked()
+{
+    ui->envoi->hide();
+    ui->index->show();
+}
+
+void MainWindow::on_backAide_clicked()
+{
+    ui->aide->hide();
+    ui->index->show();
+}

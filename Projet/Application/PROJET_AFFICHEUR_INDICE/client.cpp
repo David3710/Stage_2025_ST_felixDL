@@ -75,8 +75,36 @@ void Client::afficherErreur(QAbstractSocket::SocketError socketError)
     }
 }
 
-QString Client::constructionTrame(std::string message)
+QString Client::constructionTrame(std::string t)
 {
+
+    QString trame = "<ID01>";
+    trame.push_back(t.c_str());
+    std::cout << trame.toStdString() << std::endl;
+    QString checksum = calculChecksum(t);
+    trame.push_back(checksum);
+
+    std::cout << trame.toStdString() << std::endl;
+
+    return trame;
+
+}
+
+QString Client::calculChecksum(std::string t)
+{
+
+    uint8_t checksum = 0;
+
+        // Boucle sur chaque caractère de la chaîne
+        for (char c : t) {
+            checksum ^= static_cast<uint8_t>(c);
+        }
+
+        // Convertir le résultat en QString hexadécimal, sur 2 chiffres
+        QString result = QString("%1").arg(checksum, 2, 16, QChar('0')).toUpper();
+        result.push_back("<E>");
+
+        return result;
 
 }
 
@@ -85,11 +113,12 @@ void Client::envoiTexte(const std::string &s)
     std::cout << "Envoi de : " << s << std::endl;
     //QString texte = tr(s.c_str());
     //QString texte = QByteArrayLiteral();
+    std::string trame = constructionTrame(s).toStdString();
     QByteArray block;
     QDataStream out(&block, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_0);
     out << (quint16)0;
-    out << s.c_str();
+    out << trame.c_str();
     out.device()->seek(0);
     out << (quint16)(block.size() - sizeof(quint16));
     block.remove(0, 6);
