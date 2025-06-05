@@ -24,16 +24,18 @@ private:
 
     void rechercher();
     void afficherResultat( QSqlQuery query );
-    void listerResultat( QSqlQuery query );
+    void listerResultat();
     void wantCreerIndice();
     void creerIndice();
     void supprimerIndice();
     void modifierIndice();
+    void trierEnvoi(QString &requete);
 
 private slots:
     void on_envoiTrame_clicked();
 
     void on_versEnvoi_clicked();
+
     void on_backEnvoi_clicked();
 
     void on_versGestion_clicked();
@@ -54,8 +56,15 @@ private slots:
 
     void on_nouvelIndice_returnPressed();
 
+    void on_trierEnvoiBox_activated(const QString &arg1);
+
+    void on_selectionTriage_textChanged(const QString &arg1);
+
+    void on_reponseTable_cellDoubleClicked(int row, int column);
+
 private:
     QString m_nom_indice;
+    QList<QString> m_indices;
     Client m_client;
     Ui::MainWindow *ui;
 };

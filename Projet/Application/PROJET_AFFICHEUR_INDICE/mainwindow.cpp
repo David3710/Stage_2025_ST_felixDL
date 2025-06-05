@@ -50,7 +50,7 @@ void MainWindow::on_envoiTrame_clicked()
     ajoutPolice(trame);
     ajoutCouleur(trame);
 
-    trame.push_back(ui->texteMessage->text());
+    trame.push_back(ui->indiceBox->currentText());
 
     std::cout << trame.toStdString() << std::endl;
 
@@ -69,7 +69,15 @@ void MainWindow::rechercher()
     {
         QSqlQuery query;
 
-        QString requete("SELECT nom FROM indice WHERE 1");
+        QString requete("SELECT nom FROM indice ");
+
+        if(ui->trierEnvoiBox->currentIndex() != 0){
+            trierEnvoi(requete);
+        }
+        else {
+            ui->selectionTriage->hide();
+            requete.push_back("WHERE 1");
+        }
 
         std::cout << requete.toStdString() << std::endl;
         query.prepare( requete );
@@ -80,7 +88,6 @@ void MainWindow::rechercher()
         }
 
         afficherResultat(query);
-        listerResultat(query);
 
         db.close();
     }
@@ -109,21 +116,23 @@ void MainWindow::afficherResultat( QSqlQuery query )
         {
             QString valeur = query.value( colonne ).toString(); // récupération de la valeur
             ui->reponseTable->setItem(ligne, colonne, new QTableWidgetItem(valeur) ); // ajout de la valeur dans la table
+            m_indices.append(valeur);
         }
 
         ligne++;
     }
 }
 
-void MainWindow::listerResultat(QSqlQuery query)
+void MainWindow::listerResultat() //c304
 {
-    QSqlRecord record = query.record();
 
-    while (query.next()) {
-         QString valeur = query.value( "a" ).toString();
-         ui->indiceBox->addItem(valeur);
-         std::cout << valeur.toStdString() << std::endl;
+    ui->indiceBox->clear();
+    rechercher();
+    for ( int i = 0; i != ui->reponseTable->rowCount(); ++i) {
+        ui->indiceBox->addItem(m_indices[i]);
     }
+    m_indices.clear();
+
 }
 
 void MainWindow::creerIndice()
@@ -169,9 +178,6 @@ void MainWindow::supprimerIndice()
 
         QString requete("DELETE FROM indice WHERE nom = '");
 
-        //QList<QTableWidgetItem*> selectedItems = ui->reponseTable->selectedItems();
-        //QList<QString> listSelectedItems = selectedItems.
-
         std::cout << m_nom_indice.toStdString() << std::endl;
 
         requete.push_back(m_nom_indice);
@@ -191,6 +197,27 @@ void MainWindow::supprimerIndice()
     }
 }
 
+void MainWindow::trierEnvoi(QString &requete)
+{
+
+    if(ui->trierEnvoiBox->currentIndex() == 1) {
+        ui->selectionTriage->hide();
+        requete.push_back("ORDER BY lower(nom)");
+    }
+    if(ui->trierEnvoiBox->currentIndex() == 2) {
+        ui->selectionTriage->hide();
+        requete.push_back("ORDER BY lower(nom) desc");
+    }
+    if(ui->trierEnvoiBox->currentIndex() == 3) {
+        ui->selectionTriage->show();
+        requete.push_back("WHERE nom LIKE '");
+        requete.push_back(ui->selectionTriage->text());
+        requete.push_back("%'");
+    }
+
+
+}
+
 //------------------------------------------------
 // Méthodes des boutons du menu principal
 
@@ -204,6 +231,7 @@ void MainWindow::on_versEnvoi_clicked()
 {
     ui->index->hide();
     ui->envoi->show();
+    listerResultat();
 }
 
 void MainWindow::on_versAide_clicked()
@@ -214,14 +242,6 @@ void MainWindow::on_versAide_clicked()
 
 //------------------------------------------------
 // Méthodes des boutons de retour en arrière
-
-void MainWindow::wantCreerIndice() {
-    creerIndice();
-    ui->creer->hide();
-    ui->nouvelIndice->setText("");
-    ui->gestion->show();
-    rechercher();
-}
 
 void MainWindow::on_backGestion_clicked()
 {
@@ -241,16 +261,35 @@ void MainWindow::on_backAide_clicked()
     ui->index->show();
 }
 
-void MainWindow::on_ajouterIndice_clicked()
-{
-    wantCreerIndice();
-}
+//------------------------------------------------
+// Méthodes gérants l'ajout d'indices à la BDD
 
 void MainWindow::on_creerIndice_clicked()
 {
     ui->gestion->hide();
     ui->creer->show();
 }
+
+void MainWindow::wantCreerIndice() {
+    creerIndice();
+    ui->creer->hide();
+    ui->nouvelIndice->setText("");
+    ui->gestion->show();
+    rechercher();
+}
+
+void MainWindow::on_ajouterIndice_clicked()
+{
+    wantCreerIndice();
+}
+
+void MainWindow::on_nouvelIndice_returnPressed()
+{
+    wantCreerIndice();
+}
+
+//------------------------------------------------
+// Méthodes gérants la suppression d'un indice
 
 void MainWindow::on_supprimerIndice_clicked()
 {
@@ -259,6 +298,9 @@ void MainWindow::on_supprimerIndice_clicked()
     ui->gestion->show();
     rechercher();
 }
+
+//------------------------------------------------
+// Permet de savoir quelle cellule est sélectionnée
 
 void MainWindow::on_reponseTable_cellClicked(int row, int column)
 {
@@ -270,7 +312,18 @@ void MainWindow::on_reponseTable_cellClicked(int row, int column)
     std::cout << m_nom_indice.toStdString() << std::endl;
 }
 
-void MainWindow::on_nouvelIndice_returnPressed()
+void MainWindow::on_trierEnvoiBox_activated(const QString &arg1)
 {
-    wantCreerIndice();
+    listerResultat();
+}
+
+
+void MainWindow::on_selectionTriage_textChanged(const QString &arg1)
+{
+    listerResultat();
+}
+
+void MainWindow::on_reponseTable_cellDoubleClicked(int row, int column)
+{
+    rechercher();
 }
