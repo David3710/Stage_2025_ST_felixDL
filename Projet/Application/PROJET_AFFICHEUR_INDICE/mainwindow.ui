@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>4</number>
     </property>
     <widget class="QWidget" name="index">
      <widget class="QWidget" name="horizontalLayoutWidget">
@@ -78,9 +78,9 @@
      <widget class="QWidget" name="horizontalLayoutWidget_2">
       <property name="geometry">
        <rect>
-        <x>110</x>
-        <y>460</y>
-        <width>571</width>
+        <x>130</x>
+        <y>430</y>
+        <width>561</width>
         <height>80</height>
        </rect>
       </property>
@@ -124,10 +124,10 @@
      <widget class="QTableWidget" name="reponseTable">
       <property name="geometry">
        <rect>
-        <x>220</x>
-        <y>130</y>
-        <width>256</width>
-        <height>192</height>
+        <x>130</x>
+        <y>70</y>
+        <width>561</width>
+        <height>361</height>
        </rect>
       </property>
      </widget>
@@ -260,6 +260,24 @@
        <string>&lt;-</string>
       </property>
      </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_3">
+      <property name="geometry">
+       <rect>
+        <x>260</x>
+        <y>140</y>
+        <width>289</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_7">
+       <item>
+        <widget class="QComboBox" name="comboBox_2"/>
+       </item>
+       <item>
+        <widget class="QComboBox" name="indiceBox"/>
+       </item>
+      </layout>
+     </widget>
     </widget>
     <widget class="QWidget" name="aide">
      <widget class="QWidget" name="verticalLayoutWidget_2">
@@ -302,6 +320,46 @@
       </property>
      </widget>
     </widget>
+    <widget class="QWidget" name="creer">
+     <widget class="QLineEdit" name="nouvelIndice">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>220</y>
+        <width>241</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="ajouterIndice">
+      <property name="geometry">
+       <rect>
+        <x>360</x>
+        <y>300</y>
+        <width>75</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Créer</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_5">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>250</y>
+        <width>121</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Phase n°</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="supprimer"/>
+    <widget class="QWidget" name="modifier"/>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -310,7 +368,7 @@
      <x>0</x>
      <y>0</y>
      <width>819</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

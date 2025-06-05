@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "client.h"
+#include <QtSql/QtSql>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -21,8 +22,13 @@ private:
     void ajoutPolice(QString &trame);
     void ajoutCouleur(QString &trame);
 
-    //void rechercher();
-    //void afficherResultat( QSqlQuery query );
+    void rechercher();
+    void afficherResultat( QSqlQuery query );
+    void listerResultat( QSqlQuery query );
+    void wantCreerIndice();
+    void creerIndice();
+    void supprimerIndice();
+    void modifierIndice();
 
 private slots:
     void on_envoiTrame_clicked();
@@ -38,7 +44,18 @@ private slots:
 
     void on_backAide_clicked();
 
+    void on_ajouterIndice_clicked();
+
+    void on_creerIndice_clicked();
+
+    void on_supprimerIndice_clicked();
+
+    void on_reponseTable_cellClicked(int row, int column);
+
+    void on_nouvelIndice_returnPressed();
+
 private:
+    QString m_nom_indice;
     Client m_client;
     Ui::MainWindow *ui;
 };

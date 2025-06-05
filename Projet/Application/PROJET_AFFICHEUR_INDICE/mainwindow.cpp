@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    rechercher();
 }
 
 MainWindow::~MainWindow()
@@ -17,11 +18,11 @@ MainWindow::~MainWindow()
 void MainWindow::ajoutVitesseDefilement(QString &trame)
 {
     if(ui->vitesseDefilementBox->currentText() == "Lent")
-        trame.push_back("<MD><WC><FA>");
+        trame.push_back("<Mq><WC><FA>");
     if(ui->vitesseDefilementBox->currentText() == "Normal")
-        trame.push_back("<MC><WC><FA>");
+        trame.push_back("<Ma><WC><FA>");
     if(ui->vitesseDefilementBox->currentText() == "Rapide")
-        trame.push_back("<MB><WC><FA>");
+        trame.push_back("<MQ><WC><FA>");
 }
 
 void MainWindow::ajoutPolice(QString &trame)
@@ -56,7 +57,7 @@ void MainWindow::on_envoiTrame_clicked()
     m_client.envoiTexte(trame.toStdString());
     //ui->texteMessage->textEdited("");
 }
-/*
+
 void MainWindow::rechercher()
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
@@ -68,7 +69,7 @@ void MainWindow::rechercher()
     {
         QSqlQuery query;
 
-        QString requete("SELECT id, nom FROM indice WHERE 1");
+        QString requete("SELECT nom FROM indice WHERE 1");
 
         std::cout << requete.toStdString() << std::endl;
         query.prepare( requete );
@@ -79,6 +80,7 @@ void MainWindow::rechercher()
         }
 
         afficherResultat(query);
+        listerResultat(query);
 
         db.close();
     }
@@ -112,7 +114,83 @@ void MainWindow::afficherResultat( QSqlQuery query )
         ligne++;
     }
 }
-*/
+
+void MainWindow::listerResultat(QSqlQuery query)
+{
+    QSqlRecord record = query.record();
+
+    while (query.next()) {
+         QString valeur = query.value( "a" ).toString();
+         ui->indiceBox->addItem(valeur);
+         std::cout << valeur.toStdString() << std::endl;
+    }
+}
+
+void MainWindow::creerIndice()
+{
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("../PROJET_AFFICHEUR_INDICE/indice.db");
+
+    if( ! db.open() )
+        std::cout << "La base de données n'a pas été ouverte" << std::endl;
+    else
+    {
+        QSqlQuery query;
+
+        QString requete("INSERT INTO indice (nom) VALUES ('");
+
+        requete.push_back(ui->nouvelIndice->text());
+        requete.push_back("')");
+
+        std::cout << requete.toStdString() << std::endl;
+        query.prepare( requete );
+
+        if( !query.exec() )
+        {
+            // Error Handling, check query.lastError(), probably return
+        }
+
+        afficherResultat(query);
+
+        db.close();
+    }
+}
+
+void MainWindow::supprimerIndice()
+{
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("../PROJET_AFFICHEUR_INDICE/indice.db");
+
+    if( ! db.open() )
+        std::cout << "La base de données n'a pas été ouverte" << std::endl;
+    else
+    {
+        QSqlQuery query;
+
+        QString requete("DELETE FROM indice WHERE nom = '");
+
+        //QList<QTableWidgetItem*> selectedItems = ui->reponseTable->selectedItems();
+        //QList<QString> listSelectedItems = selectedItems.
+
+        std::cout << m_nom_indice.toStdString() << std::endl;
+
+        requete.push_back(m_nom_indice);
+        requete.push_back("'");
+
+        std::cout << requete.toStdString() << std::endl;
+        query.prepare( requete );
+
+        if( !query.exec() )
+        {
+            // Error Handling, check query.lastError(), probably return
+        }
+
+        afficherResultat(query);
+
+        db.close();
+    }
+}
+
 //------------------------------------------------
 // Méthodes des boutons du menu principal
 
@@ -137,6 +215,14 @@ void MainWindow::on_versAide_clicked()
 //------------------------------------------------
 // Méthodes des boutons de retour en arrière
 
+void MainWindow::wantCreerIndice() {
+    creerIndice();
+    ui->creer->hide();
+    ui->nouvelIndice->setText("");
+    ui->gestion->show();
+    rechercher();
+}
+
 void MainWindow::on_backGestion_clicked()
 {
     ui->gestion->hide();
@@ -153,4 +239,38 @@ void MainWindow::on_backAide_clicked()
 {
     ui->aide->hide();
     ui->index->show();
+}
+
+void MainWindow::on_ajouterIndice_clicked()
+{
+    wantCreerIndice();
+}
+
+void MainWindow::on_creerIndice_clicked()
+{
+    ui->gestion->hide();
+    ui->creer->show();
+}
+
+void MainWindow::on_supprimerIndice_clicked()
+{
+    supprimerIndice();
+    ui->supprimer->hide();
+    ui->gestion->show();
+    rechercher();
+}
+
+void MainWindow::on_reponseTable_cellClicked(int row, int column)
+{
+    std::cout << row << std::endl;
+    std::cout << column << std::endl;
+
+    m_nom_indice = ui->reponseTable->item(row, column)->text();
+
+    std::cout << m_nom_indice.toStdString() << std::endl;
+}
+
+void MainWindow::on_nouvelIndice_returnPressed()
+{
+    wantCreerIndice();
 }

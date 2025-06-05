@@ -29,7 +29,7 @@ Client::Client()
     m_tcpSocket->abort();
 
     // connexion au serveur sur le port 53000
-    m_tcpSocket->connectToHost( QHostAddress("10.16.25.211").toString(),1470 );
+    m_tcpSocket->connectToHost( QHostAddress("10.16.26.211").toString(),1470 );
     //QString trame = "<ID01><L1><PA><FE><MA><WC><FE>messageeea7E<E>";
 }
 
