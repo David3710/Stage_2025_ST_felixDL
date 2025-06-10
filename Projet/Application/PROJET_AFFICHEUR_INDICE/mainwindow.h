@@ -62,6 +62,8 @@ private slots:
 
     void on_reponseTable_cellDoubleClicked(int row, int column);
 
+    void on_resetOption_clicked();
+
 private:
     QString m_nom_indice;
     QList<QString> m_indices;

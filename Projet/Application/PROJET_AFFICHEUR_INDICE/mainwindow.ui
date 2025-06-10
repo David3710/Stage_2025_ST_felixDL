@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="index">
      <widget class="QWidget" name="horizontalLayoutWidget">
@@ -81,7 +81,7 @@
         <x>130</x>
         <y>430</y>
         <width>561</width>
-        <height>80</height>
+        <height>102</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_6">
@@ -101,6 +101,12 @@
        </item>
        <item>
         <widget class="QPushButton" name="modifierIndice">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="text">
           <string>Modifier un indice</string>
          </property>
@@ -226,9 +232,9 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
-          <widget class="QLineEdit" name="texteMessage">
+          <widget class="QPushButton" name="resetOption">
            <property name="text">
-            <string/>
+            <string>Remettre les options par défaut</string>
            </property>
           </widget>
          </item>
@@ -284,7 +290,7 @@
          </item>
          <item>
           <property name="text">
-           <string>Par ordre alphabétique inverse</string>
+           <string>Qui contient...</string>
           </property>
          </item>
          <item>

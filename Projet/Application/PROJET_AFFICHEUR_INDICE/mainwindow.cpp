@@ -15,6 +15,9 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+//------------------------------------------------
+// Personnalisation et envoi de la trame à l'afficheur
+
 void MainWindow::ajoutVitesseDefilement(QString &trame)
 {
     if(ui->vitesseDefilementBox->currentText() == "Lent")
@@ -37,6 +40,14 @@ void MainWindow::ajoutPolice(QString &trame)
 
 void MainWindow::ajoutCouleur(QString &trame)
 {
+    if(ui->couleurBox->currentText() == "Blanc")
+        trame.push_back("<CB>");
+    if(ui->couleurBox->currentText() == "Rouge")
+        trame.push_back("<CB>");
+    if(ui->couleurBox->currentText() == "Rouge")
+        trame.push_back("<CB>");
+    if(ui->couleurBox->currentText() == "Rouge")
+        trame.push_back("<CB>");
     if(ui->couleurBox->currentText() == "Rouge")
         trame.push_back("<CB>");
 }
@@ -58,7 +69,10 @@ void MainWindow::on_envoiTrame_clicked()
     //ui->texteMessage->textEdited("");
 }
 
-void MainWindow::rechercher()
+//------------------------------------------------
+// Méthodes qui gèrent la BDD
+
+void MainWindow::rechercher() // Cherche et ouvre la BDD
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("../PROJET_AFFICHEUR_INDICE/indice.db");
@@ -93,7 +107,7 @@ void MainWindow::rechercher()
     }
 }
 
-void MainWindow::afficherResultat( QSqlQuery query )
+void MainWindow::afficherResultat( QSqlQuery query ) // Affiche la BDD sur une table de l'affichage graphique
 {
     QSqlRecord record = query.record();
 
@@ -123,7 +137,7 @@ void MainWindow::afficherResultat( QSqlQuery query )
     }
 }
 
-void MainWindow::listerResultat() //c304
+void MainWindow::listerResultat() // Enregistre la BDD dans une variable pour l'afficher dans une boîte déroulante dans l'écran d'envoi d'indice
 {
 
     ui->indiceBox->clear();
@@ -135,7 +149,7 @@ void MainWindow::listerResultat() //c304
 
 }
 
-void MainWindow::creerIndice()
+void MainWindow::creerIndice() // Permet de créer un indice en choisissant son nom
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("../PROJET_AFFICHEUR_INDICE/indice.db");
@@ -165,7 +179,7 @@ void MainWindow::creerIndice()
     }
 }
 
-void MainWindow::supprimerIndice()
+void MainWindow::supprimerIndice() // Permet de supprimer un indice en le sélectionnant dans la table
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("../PROJET_AFFICHEUR_INDICE/indice.db");
@@ -197,18 +211,20 @@ void MainWindow::supprimerIndice()
     }
 }
 
-void MainWindow::trierEnvoi(QString &requete)
+void MainWindow::trierEnvoi(QString &requete) // Permet le tri des indices listés dans la boîte déroulante dans l'écran d'envoi d'indice
 {
 
-    if(ui->trierEnvoiBox->currentIndex() == 1) {
+    if(ui->trierEnvoiBox->currentIndex() == 1) { // Par ordre alphabétique
         ui->selectionTriage->hide();
         requete.push_back("ORDER BY lower(nom)");
     }
-    if(ui->trierEnvoiBox->currentIndex() == 2) {
-        ui->selectionTriage->hide();
-        requete.push_back("ORDER BY lower(nom) desc");
+    if(ui->trierEnvoiBox->currentIndex() == 2) { // Contient un mot
+        ui->selectionTriage->show();
+        requete.push_back("WHERE nom LIKE '%");
+        requete.push_back(ui->selectionTriage->text());
+        requete.push_back("%'");
     }
-    if(ui->trierEnvoiBox->currentIndex() == 3) {
+    if(ui->trierEnvoiBox->currentIndex() == 3) { // Commençant par...
         ui->selectionTriage->show();
         requete.push_back("WHERE nom LIKE '");
         requete.push_back(ui->selectionTriage->text());
@@ -221,20 +237,20 @@ void MainWindow::trierEnvoi(QString &requete)
 //------------------------------------------------
 // Méthodes des boutons du menu principal
 
-void MainWindow::on_versGestion_clicked()
+void MainWindow::on_versGestion_clicked() // Cliquer sur le bouton "Gérer les indices"
 {
     ui->index->hide();
     ui->gestion->show();
 }
 
-void MainWindow::on_versEnvoi_clicked()
+void MainWindow::on_versEnvoi_clicked() // Cliquer sur le bouton "Envoyer un indice"
 {
     ui->index->hide();
     ui->envoi->show();
     listerResultat();
 }
 
-void MainWindow::on_versAide_clicked()
+void MainWindow::on_versAide_clicked() // Cliquer sur le bouton "Aide"
 {
     ui->index->hide();
     ui->aide->show();
@@ -243,19 +259,19 @@ void MainWindow::on_versAide_clicked()
 //------------------------------------------------
 // Méthodes des boutons de retour en arrière
 
-void MainWindow::on_backGestion_clicked()
+void MainWindow::on_backGestion_clicked() // Cliquer sur le bouton retour en arrière de l'écran de gestion
 {
     ui->gestion->hide();
     ui->index->show();
 }
 
-void MainWindow::on_backEnvoi_clicked()
+void MainWindow::on_backEnvoi_clicked() // Cliquer sur le bouton retour en arrière de l'écran d'envoi
 {
     ui->envoi->hide();
     ui->index->show();
 }
 
-void MainWindow::on_backAide_clicked()
+void MainWindow::on_backAide_clicked() // Cliquer sur le bouton retour en arrière de l'écran d'aide
 {
     ui->aide->hide();
     ui->index->show();
@@ -300,7 +316,7 @@ void MainWindow::on_supprimerIndice_clicked()
 }
 
 //------------------------------------------------
-// Permet de savoir quelle cellule est sélectionnée
+// Méthode de la table d'affichage
 
 void MainWindow::on_reponseTable_cellClicked(int row, int column)
 {
@@ -312,18 +328,27 @@ void MainWindow::on_reponseTable_cellClicked(int row, int column)
     std::cout << m_nom_indice.toStdString() << std::endl;
 }
 
-void MainWindow::on_trierEnvoiBox_activated(const QString &arg1)
+void MainWindow::on_reponseTable_cellDoubleClicked(int row, int column)
 {
-    listerResultat();
+    rechercher();
 }
-
 
 void MainWindow::on_selectionTriage_textChanged(const QString &arg1)
 {
     listerResultat();
 }
 
-void MainWindow::on_reponseTable_cellDoubleClicked(int row, int column)
+
+void MainWindow::on_trierEnvoiBox_activated(const QString &arg1)
 {
-    rechercher();
+    listerResultat();
+}
+
+
+void MainWindow::on_resetOption_clicked()
+{
+    ui->trierEnvoiBox->setCurrentIndex(0);
+    ui->selectionTriage->hide();
+    listerResultat();
+    ui->vitesseDefilementBox->setCurrentIndex(1);
 }
