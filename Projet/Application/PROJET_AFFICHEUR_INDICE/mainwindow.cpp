@@ -18,7 +18,7 @@ MainWindow::~MainWindow()
 //------------------------------------------------
 // Personnalisation et envoi de la trame à l'afficheur
 
-void MainWindow::ajoutVitesseDefilement(QString &trame)
+void MainWindow::ajoutVitesseDefilement(QString &trame) // Ajoute à la trame la balise de défilement
 {
     if(ui->vitesseDefilementBox->currentText() == "Lent")
         trame.push_back("<Mq><WC><FA>");
@@ -28,7 +28,7 @@ void MainWindow::ajoutVitesseDefilement(QString &trame)
         trame.push_back("<MQ><WC><FA>");
 }
 
-void MainWindow::ajoutPolice(QString &trame)
+void MainWindow::ajoutPolice(QString &trame) // Ajoute à la trame la balise de police d'écriture
 {
     if(ui->policeBox->currentText() == "Petit")
         trame.push_back("<AC>");
@@ -38,22 +38,24 @@ void MainWindow::ajoutPolice(QString &trame)
         trame.push_back("<AB>");
 }
 
-void MainWindow::ajoutCouleur(QString &trame)
+void MainWindow::ajoutCouleur(QString &trame) // Ajoute à la trame la balise de couleur
 {
-    if(ui->couleurBox->currentText() == "Blanc")
-        trame.push_back("<CB>");
     if(ui->couleurBox->currentText() == "Rouge")
         trame.push_back("<CB>");
-    if(ui->couleurBox->currentText() == "Rouge")
-        trame.push_back("<CB>");
-    if(ui->couleurBox->currentText() == "Rouge")
-        trame.push_back("<CB>");
-    if(ui->couleurBox->currentText() == "Rouge")
-        trame.push_back("<CB>");
+    if(ui->couleurBox->currentText() == "Jaune")
+        trame.push_back("<CJ>");
+    if(ui->couleurBox->currentText() == "Vert")
+        trame.push_back("<CE>");
+    if(ui->couleurBox->currentText() == "Orange")
+        trame.push_back("<CH>");
+    if(ui->couleurBox->currentText() == "Tricolor")
+        trame.push_back("<CR>");
+    if(ui->couleurBox->currentText() == "Multicolor")
+        trame.push_back("<CS>");
 }
 
 
-void MainWindow::on_envoiTrame_clicked()
+void MainWindow::on_envoiTrame_clicked() // Envoi la trame à la variable client qui s'occupe de l'envoi à l'afficheur (convertisseur)
 {
     QString trame = "<L1><PA><FE>";
 
@@ -66,7 +68,6 @@ void MainWindow::on_envoiTrame_clicked()
     std::cout << trame.toStdString() << std::endl;
 
     m_client.envoiTexte(trame.toStdString());
-    //ui->texteMessage->textEdited("");
 }
 
 //------------------------------------------------
@@ -83,13 +84,14 @@ void MainWindow::rechercher() // Cherche et ouvre la BDD
     {
         QSqlQuery query;
 
-        QString requete("SELECT nom FROM indice ");
+        QString requete("SELECT nom, etape FROM indice ");
 
         if(ui->trierEnvoiBox->currentIndex() != 0){
             trierEnvoi(requete);
         }
         else {
             ui->selectionTriage->hide();
+            ui->numeroEtape->hide();
             requete.push_back("WHERE 1");
         }
 
@@ -130,7 +132,8 @@ void MainWindow::afficherResultat( QSqlQuery query ) // Affiche la BDD sur une t
         {
             QString valeur = query.value( colonne ).toString(); // récupération de la valeur
             ui->reponseTable->setItem(ligne, colonne, new QTableWidgetItem(valeur) ); // ajout de la valeur dans la table
-            m_indices.append(valeur);
+            if(valeur.toInt() % ui->reponseTable->columnCount() == 0 || valeur == 0) // Seul les noms des indices sont ajoutés à la boîte déroulante
+                ui->indiceBox->addItem(valeur);
         }
 
         ligne++;
@@ -142,10 +145,6 @@ void MainWindow::listerResultat() // Enregistre la BDD dans une variable pour l'
 
     ui->indiceBox->clear();
     rechercher();
-    for ( int i = 0; i != ui->reponseTable->rowCount(); ++i) {
-        ui->indiceBox->addItem(m_indices[i]);
-    }
-    m_indices.clear();
 
 }
 
@@ -160,9 +159,11 @@ void MainWindow::creerIndice() // Permet de créer un indice en choisissant son 
     {
         QSqlQuery query;
 
-        QString requete("INSERT INTO indice (nom) VALUES ('");
+        QString requete("INSERT INTO indice (nom, etape) VALUES ('");
 
         requete.push_back(ui->nouvelIndice->text());
+        requete.push_back("', '");
+        requete.push_back(ui->etapeNouvelIndice->text());
         requete.push_back("')");
 
         std::cout << requete.toStdString() << std::endl;
@@ -190,12 +191,47 @@ void MainWindow::supprimerIndice() // Permet de supprimer un indice en le sélec
     {
         QSqlQuery query;
 
-        QString requete("DELETE FROM indice WHERE nom = '");
+        QString requete("DELETE FROM indice WHERE nom = \"");
 
         std::cout << m_nom_indice.toStdString() << std::endl;
 
-        requete.push_back(m_nom_indice);
-        requete.push_back("'");
+        requete.push_back(ui->reponseTable->currentItem()->text());
+        requete.push_back("\"");
+
+        std::cout << requete.toStdString() << std::endl;
+        query.prepare( requete );
+
+        if( !query.exec() )
+        {
+            // Error Handling, check query.lastError(), probably return
+        }
+
+        afficherResultat(query);
+
+        db.close();
+    }
+}
+
+void MainWindow::modifierIndice()
+{
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("../PROJET_AFFICHEUR_INDICE/indice.db");
+
+    if( ! db.open() )
+        std::cout << "La base de données n'a pas été ouverte" << std::endl;
+    else
+    {
+        QSqlQuery query;
+
+        QString requete("UPDATE indice SET nom = \"");
+        requete.push_back(ui->indiceModifiable->text());
+        requete.push_back("\", etape = '");
+        requete.push_back(ui->etapeModifiable->text());
+        requete.push_back("' ");
+
+        requete.push_back("WHERE nom = \"");
+        requete.push_back(ui->reponseTable->item(ui->reponseTable->currentRow(), 0)->text());
+        requete.push_back("\"");
 
         std::cout << requete.toStdString() << std::endl;
         query.prepare( requete );
@@ -216,20 +252,31 @@ void MainWindow::trierEnvoi(QString &requete) // Permet le tri des indices list�
 
     if(ui->trierEnvoiBox->currentIndex() == 1) { // Par ordre alphabétique
         ui->selectionTriage->hide();
+        ui->numeroEtape->hide();
         requete.push_back("ORDER BY lower(nom)");
     }
     if(ui->trierEnvoiBox->currentIndex() == 2) { // Contient un mot
         ui->selectionTriage->show();
-        requete.push_back("WHERE nom LIKE '%");
+        ui->numeroEtape->hide();
+        requete.push_back("WHERE nom LIKE \"%");
         requete.push_back(ui->selectionTriage->text());
-        requete.push_back("%'");
+        requete.push_back("%\"");
     }
     if(ui->trierEnvoiBox->currentIndex() == 3) { // Commençant par...
         ui->selectionTriage->show();
-        requete.push_back("WHERE nom LIKE '");
+        ui->numeroEtape->hide();
+        requete.push_back("WHERE nom LIKE \"");
         requete.push_back(ui->selectionTriage->text());
-        requete.push_back("%'");
+        requete.push_back("%\"");
     }
+    if(ui->trierEnvoiBox->currentIndex() == 4) { // Utilisé à l'étape...
+        ui->selectionTriage->hide();
+        ui->numeroEtape->show();
+        requete.push_back("WHERE etape = '");
+        requete.push_back(ui->numeroEtape->text());
+        requete.push_back("'");
+    }
+
 
 
 }
@@ -304,15 +351,46 @@ void MainWindow::on_nouvelIndice_returnPressed()
     wantCreerIndice();
 }
 
+void MainWindow::on_annulerCreer_clicked()
+{
+    ui->creer->hide();
+    ui->gestion->show();
+}
+
 //------------------------------------------------
 // Méthodes gérants la suppression d'un indice
 
 void MainWindow::on_supprimerIndice_clicked()
 {
     supprimerIndice();
-    ui->supprimer->hide();
-    ui->gestion->show();
     rechercher();
+}
+
+//------------------------------------------------
+// Méthodes gérants la modification d'un indice
+
+void MainWindow::on_modifierIndice_clicked()
+{
+    ui->gestion->hide();
+    ui->modifier->show();
+
+    ui->indiceModifiable->setText(ui->reponseTable->item(ui->reponseTable->currentRow(), 0)->text());
+    ui->etapeModifiable->setText(ui->reponseTable->item(ui->reponseTable->currentRow(), 1)->text());
+}
+
+void MainWindow::on_modificationIndice_clicked()
+{
+    modifierIndice();
+    rechercher();
+
+    ui->modifier->hide();
+    ui->gestion->show();
+}
+
+void MainWindow::on_annulerModifier_clicked()
+{
+    ui->modifier->hide();
+    ui->gestion->show();
 }
 
 //------------------------------------------------
@@ -322,10 +400,6 @@ void MainWindow::on_reponseTable_cellClicked(int row, int column)
 {
     std::cout << row << std::endl;
     std::cout << column << std::endl;
-
-    m_nom_indice = ui->reponseTable->item(row, column)->text();
-
-    std::cout << m_nom_indice.toStdString() << std::endl;
 }
 
 void MainWindow::on_reponseTable_cellDoubleClicked(int row, int column)
@@ -349,6 +423,14 @@ void MainWindow::on_resetOption_clicked()
 {
     ui->trierEnvoiBox->setCurrentIndex(0);
     ui->selectionTriage->hide();
+    ui->numeroEtape->hide();
     listerResultat();
     ui->vitesseDefilementBox->setCurrentIndex(1);
+    ui->policeBox->setCurrentIndex(1);
+    ui->couleurBox->setCurrentIndex(0);
+}
+
+void MainWindow::on_numeroEtape_textChanged(const QString &arg1)
+{
+    listerResultat();
 }

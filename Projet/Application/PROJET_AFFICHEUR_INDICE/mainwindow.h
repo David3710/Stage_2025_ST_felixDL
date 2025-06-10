@@ -64,9 +64,18 @@ private slots:
 
     void on_resetOption_clicked();
 
+    void on_numeroEtape_textChanged(const QString &arg1);
+
+    void on_modifierIndice_clicked();
+
+    void on_annulerCreer_clicked();
+
+    void on_annulerModifier_clicked();
+
+    void on_modificationIndice_clicked();
+
 private:
     QString m_nom_indice;
-    QList<QString> m_indices;
     Client m_client;
     Ui::MainWindow *ui;
 };
