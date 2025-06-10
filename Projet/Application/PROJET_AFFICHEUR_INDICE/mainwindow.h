@@ -30,6 +30,7 @@ private:
     void supprimerIndice();
     void modifierIndice();
     void trierEnvoi(QString &requete);
+    void remettreDefaut();
 
 private slots:
     void on_envoiTrame_clicked();

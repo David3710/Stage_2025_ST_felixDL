@@ -2,29 +2,44 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>808</width>
-    <height>598</height>
+    <width>1260</width>
+    <height>867</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="maximumSize">
+    <size>
+     <width>1260</width>
+     <height>824</height>
+    </size>
+   </property>
    <widget class="QStackedWidget" name="stackedWidget">
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>801</width>
-      <height>581</height>
+      <width>1221</width>
+      <height>811</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="index">
      <widget class="QWidget" name="horizontalLayoutWidget">
@@ -63,14 +78,14 @@
      <widget class="QLabel" name="label_4">
       <property name="geometry">
        <rect>
-        <x>230</x>
-        <y>80</y>
-        <width>311</width>
-        <height>101</height>
+        <x>30</x>
+        <y>40</y>
+        <width>691</width>
+        <height>201</height>
        </rect>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:48pt; font-weight:600;&quot;&gt;Indice&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:48pt; font-weight:600;&quot;&gt;Gestionnaire &lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:48pt; font-weight:600;&quot;&gt;d'indice&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Le gestionnaire d'indice permet de gérer et envoyer sur un écran DEL des indices.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
     </widget>
@@ -91,8 +106,8 @@
      <widget class="QWidget" name="verticalLayoutWidget_4">
       <property name="geometry">
        <rect>
-        <x>100</x>
-        <y>80</y>
+        <x>70</x>
+        <y>70</y>
         <width>591</width>
         <height>431</height>
        </rect>
@@ -148,15 +163,35 @@
          </item>
         </layout>
        </item>
+       <item alignment="Qt::AlignHCenter">
+        <widget class="QLabel" name="advertisementSuppression">
+         <property name="text">
+          <string>Veuillez sélectionner l'indice que vous souhaitez supprimer</string>
+         </property>
+        </widget>
+       </item>
+       <item alignment="Qt::AlignHCenter">
+        <widget class="QLabel" name="advertisementModification">
+         <property name="text">
+          <string>Veuillez sélectionner l'indice que vous souhaitez modifier</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </widget>
     <widget class="QWidget" name="envoi">
+     <property name="maximumSize">
+      <size>
+       <width>1221</width>
+       <height>811</height>
+      </size>
+     </property>
      <widget class="QWidget" name="verticalLayoutWidget">
       <property name="geometry">
        <rect>
-        <x>150</x>
-        <y>140</y>
+        <x>70</x>
+        <y>70</y>
         <width>501</width>
         <height>221</height>
        </rect>
@@ -394,8 +429,8 @@
      <widget class="QWidget" name="verticalLayoutWidget_2">
       <property name="geometry">
        <rect>
-        <x>210</x>
-        <y>180</y>
+        <x>70</x>
+        <y>70</y>
         <width>381</width>
         <height>231</height>
        </rect>
@@ -498,7 +533,7 @@
         <x>230</x>
         <y>170</y>
         <width>321</width>
-        <height>131</height>
+        <height>187</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -531,6 +566,13 @@
         </layout>
        </item>
        <item>
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>L'étape ne peut qu'être un nombre. Réessayez</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <layout class="QHBoxLayout" name="horizontalLayout_12">
          <item>
           <widget class="QPushButton" name="modificationIndice">
@@ -558,7 +600,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>808</width>
+     <width>1260</width>
      <height>22</height>
     </rect>
    </property>

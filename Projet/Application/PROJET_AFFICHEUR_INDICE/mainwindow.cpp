@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "iostream"
+#include "windows.h"
+#include <QDesktopServices>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -132,10 +134,10 @@ void MainWindow::afficherResultat( QSqlQuery query ) // Affiche la BDD sur une t
         {
             QString valeur = query.value( colonne ).toString(); // récupération de la valeur
             ui->reponseTable->setItem(ligne, colonne, new QTableWidgetItem(valeur) ); // ajout de la valeur dans la table
-            if(valeur.toInt() % ui->reponseTable->columnCount() == 0 || valeur == 0) // Seul les noms des indices sont ajoutés à la boîte déroulante
+            if(valeur.toInt() % 2 == 0 || valeur == 0) // Seul les noms des indices sont ajoutés à la boîte déroulante
                 ui->indiceBox->addItem(valeur);
         }
-
+        ui->reponseTable->horizontalHeader()->setOffset(10);
         ligne++;
     }
 }
@@ -288,11 +290,14 @@ void MainWindow::on_versGestion_clicked() // Cliquer sur le bouton "Gérer les i
 {
     ui->index->hide();
     ui->gestion->show();
+    ui->advertisementSuppression->hide();
+    ui->advertisementModification->hide();
 }
 
 void MainWindow::on_versEnvoi_clicked() // Cliquer sur le bouton "Envoyer un indice"
 {
     ui->index->hide();
+    remettreDefaut();
     ui->envoi->show();
     listerResultat();
 }
@@ -362,8 +367,15 @@ void MainWindow::on_annulerCreer_clicked()
 
 void MainWindow::on_supprimerIndice_clicked()
 {
-    supprimerIndice();
-    rechercher();
+
+    if(ui->reponseTable->currentItem() != NULL) {
+        supprimerIndice();
+        rechercher();
+    }
+    else {
+        ui->advertisementModification->hide();
+        ui->advertisementSuppression->show();
+    }
 }
 
 //------------------------------------------------
@@ -371,17 +383,28 @@ void MainWindow::on_supprimerIndice_clicked()
 
 void MainWindow::on_modifierIndice_clicked()
 {
-    ui->gestion->hide();
-    ui->modifier->show();
 
-    ui->indiceModifiable->setText(ui->reponseTable->item(ui->reponseTable->currentRow(), 0)->text());
-    ui->etapeModifiable->setText(ui->reponseTable->item(ui->reponseTable->currentRow(), 1)->text());
+    if(ui->reponseTable->currentItem() != NULL) {
+        ui->gestion->hide();
+        ui->modifier->show();
+
+        ui->indiceModifiable->setText(ui->reponseTable->item(ui->reponseTable->currentRow(), 0)->text());
+        ui->etapeModifiable->setText(ui->reponseTable->item(ui->reponseTable->currentRow(), 1)->text());
+    }
+    else {
+        ui->advertisementSuppression->hide();
+        ui->advertisementModification->show();
+    }
 }
 
 void MainWindow::on_modificationIndice_clicked()
 {
     modifierIndice();
     rechercher();
+
+    if ( ui->etapeModifiable->text().data()->isDigit() != true ) {
+
+    }
 
     ui->modifier->hide();
     ui->gestion->show();
@@ -418,9 +441,7 @@ void MainWindow::on_trierEnvoiBox_activated(const QString &arg1)
     listerResultat();
 }
 
-
-void MainWindow::on_resetOption_clicked()
-{
+void MainWindow::remettreDefaut() {
     ui->trierEnvoiBox->setCurrentIndex(0);
     ui->selectionTriage->hide();
     ui->numeroEtape->hide();
@@ -428,6 +449,11 @@ void MainWindow::on_resetOption_clicked()
     ui->vitesseDefilementBox->setCurrentIndex(1);
     ui->policeBox->setCurrentIndex(1);
     ui->couleurBox->setCurrentIndex(0);
+}
+
+void MainWindow::on_resetOption_clicked()
+{
+    remettreDefaut();
 }
 
 void MainWindow::on_numeroEtape_textChanged(const QString &arg1)
