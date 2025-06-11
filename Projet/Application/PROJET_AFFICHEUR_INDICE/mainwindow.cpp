@@ -134,10 +134,10 @@ void MainWindow::afficherResultat( QSqlQuery query ) // Affiche la BDD sur une t
         {
             QString valeur = query.value( colonne ).toString(); // récupération de la valeur
             ui->reponseTable->setItem(ligne, colonne, new QTableWidgetItem(valeur) ); // ajout de la valeur dans la table
-            if(valeur.toInt() % 2 == 0 || valeur == 0) // Seul les noms des indices sont ajoutés à la boîte déroulante
+            if(valeur.data()->isLetter()) // Seul les noms des indices sont ajoutés à la boîte déroulante
                 ui->indiceBox->addItem(valeur);
         }
-        ui->reponseTable->horizontalHeader()->setOffset(10);
+
         ligne++;
     }
 }
@@ -242,8 +242,6 @@ void MainWindow::modifierIndice()
         {
             // Error Handling, check query.lastError(), probably return
         }
-
-        afficherResultat(query);
 
         db.close();
     }
@@ -400,7 +398,7 @@ void MainWindow::on_modifierIndice_clicked()
 void MainWindow::on_modificationIndice_clicked()
 {
     modifierIndice();
-    rechercher();
+    listerResultat();
 
     if ( ui->etapeModifiable->text().data()->isDigit() != true ) {
 
