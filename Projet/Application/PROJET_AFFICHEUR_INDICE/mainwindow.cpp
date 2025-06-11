@@ -134,7 +134,7 @@ void MainWindow::afficherResultat( QSqlQuery query ) // Affiche la BDD sur une t
         {
             QString valeur = query.value( colonne ).toString(); // récupération de la valeur
             ui->reponseTable->setItem(ligne, colonne, new QTableWidgetItem(valeur) ); // ajout de la valeur dans la table
-            if(valeur.data()->isLetter()) // Seul les noms des indices sont ajoutés à la boîte déroulante
+            if(valeur.toInt() == 0 ) // Seul les noms des indices sont ajoutés à la boîte déroulante
                 ui->indiceBox->addItem(valeur);
         }
 
@@ -286,24 +286,21 @@ void MainWindow::trierEnvoi(QString &requete) // Permet le tri des indices list�
 
 void MainWindow::on_versGestion_clicked() // Cliquer sur le bouton "Gérer les indices"
 {
-    ui->index->hide();
-    ui->gestion->show();
+    ui->stackedWidget->setCurrentIndex(1);
     ui->advertisementSuppression->hide();
     ui->advertisementModification->hide();
 }
 
 void MainWindow::on_versEnvoi_clicked() // Cliquer sur le bouton "Envoyer un indice"
 {
-    ui->index->hide();
     remettreDefaut();
-    ui->envoi->show();
+    ui->stackedWidget->setCurrentIndex(2);
     listerResultat();
 }
 
 void MainWindow::on_versAide_clicked() // Cliquer sur le bouton "Aide"
 {
-    ui->index->hide();
-    ui->aide->show();
+    ui->stackedWidget->setCurrentIndex(3);
 }
 
 //------------------------------------------------
@@ -311,20 +308,17 @@ void MainWindow::on_versAide_clicked() // Cliquer sur le bouton "Aide"
 
 void MainWindow::on_backGestion_clicked() // Cliquer sur le bouton retour en arrière de l'écran de gestion
 {
-    ui->gestion->hide();
-    ui->index->show();
+    ui->stackedWidget->setCurrentIndex(0);
 }
 
 void MainWindow::on_backEnvoi_clicked() // Cliquer sur le bouton retour en arrière de l'écran d'envoi
 {
-    ui->envoi->hide();
-    ui->index->show();
+    ui->stackedWidget->setCurrentIndex(0);
 }
 
 void MainWindow::on_backAide_clicked() // Cliquer sur le bouton retour en arrière de l'écran d'aide
 {
-    ui->aide->hide();
-    ui->index->show();
+    ui->stackedWidget->setCurrentIndex(0);
 }
 
 //------------------------------------------------
@@ -332,16 +326,14 @@ void MainWindow::on_backAide_clicked() // Cliquer sur le bouton retour en arriè
 
 void MainWindow::on_creerIndice_clicked()
 {
-    ui->gestion->hide();
-    ui->creer->show();
+    ui->stackedWidget->setCurrentIndex(4);
 }
 
 void MainWindow::wantCreerIndice() {
     creerIndice();
-    ui->creer->hide();
     ui->nouvelIndice->setText("");
-    ui->gestion->show();
     rechercher();
+    ui->stackedWidget->setCurrentIndex(1);
 }
 
 void MainWindow::on_ajouterIndice_clicked()
@@ -356,8 +348,7 @@ void MainWindow::on_nouvelIndice_returnPressed()
 
 void MainWindow::on_annulerCreer_clicked()
 {
-    ui->creer->hide();
-    ui->gestion->show();
+    ui->stackedWidget->setCurrentIndex(1);
 }
 
 //------------------------------------------------
@@ -383,8 +374,7 @@ void MainWindow::on_modifierIndice_clicked()
 {
 
     if(ui->reponseTable->currentItem() != NULL) {
-        ui->gestion->hide();
-        ui->modifier->show();
+        ui->stackedWidget->setCurrentIndex(5);
 
         ui->indiceModifiable->setText(ui->reponseTable->item(ui->reponseTable->currentRow(), 0)->text());
         ui->etapeModifiable->setText(ui->reponseTable->item(ui->reponseTable->currentRow(), 1)->text());
@@ -404,14 +394,12 @@ void MainWindow::on_modificationIndice_clicked()
 
     }
 
-    ui->modifier->hide();
-    ui->gestion->show();
+    ui->stackedWidget->setCurrentIndex(1);
 }
 
 void MainWindow::on_annulerModifier_clicked()
 {
-    ui->modifier->hide();
-    ui->gestion->show();
+    ui->stackedWidget->setCurrentIndex(1);
 }
 
 //------------------------------------------------
