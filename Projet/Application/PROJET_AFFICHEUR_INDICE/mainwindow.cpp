@@ -134,7 +134,7 @@ void MainWindow::afficherResultat( QSqlQuery query ) // Affiche la BDD sur une t
         {
             QString valeur = query.value( colonne ).toString(); // récupération de la valeur
             ui->reponseTable->setItem(ligne, colonne, new QTableWidgetItem(valeur) ); // ajout de la valeur dans la table
-            if(valeur.toInt() == 0 ) // Seul les noms des indices sont ajoutés à la boîte déroulante
+            if(valeur.toInt() == 0 ) // Seul les noms des indices sont ajoutés à la boîte déroulante (à fixer)
                 ui->indiceBox->addItem(valeur);
         }
 
@@ -244,6 +244,9 @@ void MainWindow::modifierIndice()
         }
 
         db.close();
+
+        listerResultat();
+
     }
 }
 
@@ -374,6 +377,7 @@ void MainWindow::on_modifierIndice_clicked()
 {
 
     if(ui->reponseTable->currentItem() != NULL) {
+        ui->advertisementEtapeNombre->hide();
         ui->stackedWidget->setCurrentIndex(5);
 
         ui->indiceModifiable->setText(ui->reponseTable->item(ui->reponseTable->currentRow(), 0)->text());
@@ -387,14 +391,17 @@ void MainWindow::on_modifierIndice_clicked()
 
 void MainWindow::on_modificationIndice_clicked()
 {
-    modifierIndice();
     listerResultat();
+    modifierIndice();
 
     if ( ui->etapeModifiable->text().data()->isDigit() != true ) {
-
+        ui->advertisementEtapeNombre->show();
     }
 
+    listerResultat();
+
     ui->stackedWidget->setCurrentIndex(1);
+    ui->advertisementEtapeNombre->hide();
 }
 
 void MainWindow::on_annulerModifier_clicked()

@@ -60,7 +60,7 @@
      <bool>true</bool>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>5</number>
     </property>
     <widget class="QWidget" name="index">
      <widget class="QWidget" name="horizontalLayoutWidget">
@@ -556,7 +556,7 @@
        <rect>
         <x>230</x>
         <y>170</y>
-        <width>321</width>
+        <width>392</width>
         <height>187</height>
        </rect>
       </property>
@@ -590,13 +590,6 @@
         </layout>
        </item>
        <item>
-        <widget class="QLabel" name="label_9">
-         <property name="text">
-          <string>L'étape ne peut qu'être un nombre. Réessayez</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <layout class="QHBoxLayout" name="horizontalLayout_12">
          <item>
           <widget class="QPushButton" name="modificationIndice">
@@ -613,6 +606,19 @@
           </widget>
          </item>
         </layout>
+       </item>
+       <item alignment="Qt::AlignHCenter">
+        <widget class="QLabel" name="advertisementEtapeNombre">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>L'étape ne peut qu'être un nombre. Réessayez</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
