@@ -339,7 +339,7 @@ void MainWindow::on_ajouterIndice_clicked()
 
 void MainWindow::on_nouvelIndice_returnPressed()
 {
-    wantCreerIndice();
+    on_ajouterIndice_clicked();
 }
 
 void MainWindow::on_annulerCreer_clicked()
@@ -450,5 +450,10 @@ void MainWindow::on_stackedWidget_currentChanged(int arg1)
 
 void MainWindow::on_aideGestion_clicked()
 {
-    QDesktopServices::openUrl(QUrl("file:///T:/Stage/Stage_2025_ST_felixDL/Projet/Application/PROJET_AFFICHEUR_INDICE/manuel.pdf#page2",QUrl::TolerantMode));
+    QDesktopServices::openUrl(QUrl(QUrl::fromLocalFile("../PROJET_AFFICHEUR_INDICE/manuel.pdf")));
+}
+
+void MainWindow::on_aideEnvoi_clicked()
+{
+    QDesktopServices::openUrl(QUrl(QUrl::fromLocalFile("../PROJET_AFFICHEUR_INDICE/manuel.pdf")));
 }

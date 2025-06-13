@@ -78,6 +78,8 @@ private slots:
 
     void on_aideGestion_clicked();
 
+    void on_aideEnvoi_clicked();
+
 private:
     QString m_nom_indice;
     Client m_client;

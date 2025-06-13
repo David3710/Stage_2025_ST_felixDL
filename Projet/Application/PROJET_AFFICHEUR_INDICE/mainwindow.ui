@@ -60,7 +60,7 @@
      <bool>true</bool>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="index">
      <widget class="QLabel" name="labelTitre">
@@ -127,7 +127,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>&lt;-</string>
+       <string/>
       </property>
      </widget>
      <widget class="QWidget" name="verticalLayoutWidget_4">
@@ -217,72 +217,13 @@
      <widget class="QWidget" name="verticalLayoutWidget">
       <property name="geometry">
        <rect>
-        <x>70</x>
-        <y>70</y>
-        <width>501</width>
-        <height>221</height>
+        <x>140</x>
+        <y>130</y>
+        <width>511</width>
+        <height>291</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_7">
-         <item>
-          <widget class="QComboBox" name="trierEnvoiBox">
-           <item>
-            <property name="text">
-             <string>Trier les indices</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Par ordre alphabétique</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Qui contient...</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Qui commence par...</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Est utilisé à l'étape n°...</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="numeroEtape">
-           <property name="maximumSize">
-            <size>
-             <width>50</width>
-             <height>16777215</height>
-            </size>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QComboBox" name="indiceBox"/>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="selectionTriage">
-         <property name="toolTip">
-          <string>aa</string>
-         </property>
-         <property name="whatsThis">
-          <string>Tapez votre indice</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
        <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
@@ -448,18 +389,89 @@
        </rect>
       </property>
       <property name="text">
-       <string>&lt;-</string>
+       <string/>
       </property>
+     </widget>
+     <widget class="QWidget" name="verticalLayoutWidget_6">
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>70</y>
+        <width>301</width>
+        <height>50</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_7">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QComboBox" name="trierEnvoiBox">
+           <item>
+            <property name="text">
+             <string>Trier les indices</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Par ordre alphabétique</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Qui contient...</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Qui commence par...</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Est utilisé à l'étape n°...</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="numeroEtape">
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>16777215</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="indiceBox"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="selectionTriage">
+         <property name="toolTip">
+          <string>aa</string>
+         </property>
+         <property name="whatsThis">
+          <string>Tapez votre indice</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </widget>
     <widget class="QWidget" name="aide">
      <widget class="QWidget" name="verticalLayoutWidget_2">
       <property name="geometry">
        <rect>
-        <x>180</x>
-        <y>150</y>
-        <width>381</width>
-        <height>231</height>
+        <x>200</x>
+        <y>160</y>
+        <width>391</width>
+        <height>241</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
@@ -489,7 +501,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>&lt;-</string>
+       <string/>
       </property>
      </widget>
     </widget>

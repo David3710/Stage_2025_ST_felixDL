@@ -1,6 +1,9 @@
-/* Ceci est un commentaire pour montrer la syntaxe du commentaire.
+/* Ceci est un commentaire pour montrer la syntaxe du commentaire.*/
 
-QPushButton {
+QPushButton#backGestion {
+
+    background-image: url(../PROJET_AFFICHEUR_INDICE/images/backArrow.png);
+
 }
 
 QPushButton:hover {
@@ -11,7 +14,3 @@ QDialog {
     background-color: powderblue;
 }
 
-QLabel#labelTitre {
-
-}
-*/
