@@ -60,56 +60,59 @@
      <bool>true</bool>
     </property>
     <property name="currentIndex">
-     <number>5</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="index">
-     <widget class="QWidget" name="horizontalLayoutWidget">
+     <widget class="QLabel" name="labelTitre">
       <property name="geometry">
        <rect>
-        <x>110</x>
-        <y>290</y>
-        <width>561</width>
-        <height>71</height>
-       </rect>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_5">
-       <property name="sizeConstraint">
-        <enum>QLayout::SetMinAndMaxSize</enum>
-       </property>
-       <item>
-        <widget class="QPushButton" name="versGestion">
-         <property name="text">
-          <string>Gestion des indices</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="versEnvoi">
-         <property name="text">
-          <string>Envoyer un indice</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="versAide">
-         <property name="text">
-          <string>Aide</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QLabel" name="label_4">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>40</y>
-        <width>691</width>
+        <x>60</x>
+        <y>50</y>
+        <width>681</width>
         <height>201</height>
        </rect>
       </property>
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:48pt; font-weight:600;&quot;&gt;Gestionnaire &lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:48pt; font-weight:600;&quot;&gt;d'indice&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Le gestionnaire d'indice permet de gérer et envoyer sur un écran DEL des indices.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="versEnvoi">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>310</y>
+        <width>169</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Envoyer un indice</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="versGestion">
+      <property name="geometry">
+       <rect>
+        <x>330</x>
+        <y>400</y>
+        <width>151</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Gestion des indices</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="versAide">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>480</y>
+        <width>51</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Aide</string>
       </property>
      </widget>
     </widget>
@@ -130,9 +133,9 @@
      <widget class="QWidget" name="verticalLayoutWidget_4">
       <property name="geometry">
        <rect>
-        <x>70</x>
-        <y>70</y>
-        <width>591</width>
+        <x>100</x>
+        <y>80</y>
+        <width>601</width>
         <height>431</height>
        </rect>
       </property>
@@ -453,8 +456,8 @@
      <widget class="QWidget" name="verticalLayoutWidget_2">
       <property name="geometry">
        <rect>
-        <x>70</x>
-        <y>70</y>
+        <x>180</x>
+        <y>150</y>
         <width>381</width>
         <height>231</height>
        </rect>

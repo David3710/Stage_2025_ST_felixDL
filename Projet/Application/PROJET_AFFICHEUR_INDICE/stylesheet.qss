@@ -1,0 +1,17 @@
+/* Ceci est un commentaire pour montrer la syntaxe du commentaire.
+
+QPushButton {
+}
+
+QPushButton:hover {
+    color: dodgerblue;
+}
+
+QDialog {
+    background-color: powderblue;
+}
+
+QLabel#labelTitre {
+
+}
+*/

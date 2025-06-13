@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "iostream"
 #include "windows.h"
+#include <shellapi.h>
 #include <QDesktopServices>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -111,10 +112,11 @@ void MainWindow::rechercher() // Cherche et ouvre la BDD
     }
 }
 
-void MainWindow::afficherResultat( QSqlQuery query ) // Affiche la BDD sur une table de l'affichage graphique
+void MainWindow::afficherResultat( QSqlQuery query ) // Affiche la BDD sur une table et un volet déroulant de l'affichage graphique
 {
     QSqlRecord record = query.record();
 
+    ui->indiceBox->clear();
     ui->reponseTable->clear(); // on efface toute la table
     ui->reponseTable->setRowCount(0); // on enlève toutes les lignes
     ui->reponseTable->setColumnCount( record.count() ); // on initialise le nombre de colonne de la table de réponse
@@ -134,20 +136,12 @@ void MainWindow::afficherResultat( QSqlQuery query ) // Affiche la BDD sur une t
         {
             QString valeur = query.value( colonne ).toString(); // récupération de la valeur
             ui->reponseTable->setItem(ligne, colonne, new QTableWidgetItem(valeur) ); // ajout de la valeur dans la table
-            if(valeur.toInt() == 0 ) // Seul les noms des indices sont ajoutés à la boîte déroulante (à fixer)
+            if( colonne == 0 && ui->stackedWidget->currentIndex() == 2) // Seul les noms des indices sont ajoutés à la boîte déroulante (à fixer)
                 ui->indiceBox->addItem(valeur);
         }
 
         ligne++;
     }
-}
-
-void MainWindow::listerResultat() // Enregistre la BDD dans une variable pour l'afficher dans une boîte déroulante dans l'écran d'envoi d'indice
-{
-
-    ui->indiceBox->clear();
-    rechercher();
-
 }
 
 void MainWindow::creerIndice() // Permet de créer un indice en choisissant son nom
@@ -161,12 +155,12 @@ void MainWindow::creerIndice() // Permet de créer un indice en choisissant son 
     {
         QSqlQuery query;
 
-        QString requete("INSERT INTO indice (nom, etape) VALUES ('");
+        QString requete("INSERT INTO indice (nom, etape) VALUES (\"");
 
         requete.push_back(ui->nouvelIndice->text());
-        requete.push_back("', '");
+        requete.push_back("\", \"");
         requete.push_back(ui->etapeNouvelIndice->text());
-        requete.push_back("')");
+        requete.push_back("\")");
 
         std::cout << requete.toStdString() << std::endl;
         query.prepare( requete );
@@ -243,10 +237,9 @@ void MainWindow::modifierIndice()
             // Error Handling, check query.lastError(), probably return
         }
 
+        afficherResultat(query);
+
         db.close();
-
-        listerResultat();
-
     }
 }
 
@@ -298,7 +291,7 @@ void MainWindow::on_versEnvoi_clicked() // Cliquer sur le bouton "Envoyer un ind
 {
     remettreDefaut();
     ui->stackedWidget->setCurrentIndex(2);
-    listerResultat();
+    rechercher();
 }
 
 void MainWindow::on_versAide_clicked() // Cliquer sur le bouton "Aide"
@@ -377,7 +370,6 @@ void MainWindow::on_modifierIndice_clicked()
 {
 
     if(ui->reponseTable->currentItem() != NULL) {
-        ui->advertisementEtapeNombre->hide();
         ui->stackedWidget->setCurrentIndex(5);
 
         ui->indiceModifiable->setText(ui->reponseTable->item(ui->reponseTable->currentRow(), 0)->text());
@@ -391,17 +383,11 @@ void MainWindow::on_modifierIndice_clicked()
 
 void MainWindow::on_modificationIndice_clicked()
 {
-    listerResultat();
     modifierIndice();
 
-    if ( ui->etapeModifiable->text().data()->isDigit() != true ) {
-        ui->advertisementEtapeNombre->show();
-    }
-
-    listerResultat();
+    rechercher();
 
     ui->stackedWidget->setCurrentIndex(1);
-    ui->advertisementEtapeNombre->hide();
 }
 
 void MainWindow::on_annulerModifier_clicked()
@@ -416,6 +402,7 @@ void MainWindow::on_reponseTable_cellClicked(int row, int column)
 {
     std::cout << row << std::endl;
     std::cout << column << std::endl;
+    std::cout << ui->reponseTable->currentItem()->text().toStdString() << std::endl;
 }
 
 void MainWindow::on_reponseTable_cellDoubleClicked(int row, int column)
@@ -425,23 +412,26 @@ void MainWindow::on_reponseTable_cellDoubleClicked(int row, int column)
 
 void MainWindow::on_selectionTriage_textChanged(const QString &arg1)
 {
-    listerResultat();
+    rechercher();
 }
 
 
 void MainWindow::on_trierEnvoiBox_activated(const QString &arg1)
 {
-    listerResultat();
+    rechercher();
 }
 
 void MainWindow::remettreDefaut() {
     ui->trierEnvoiBox->setCurrentIndex(0);
     ui->selectionTriage->hide();
     ui->numeroEtape->hide();
-    listerResultat();
+    rechercher();
     ui->vitesseDefilementBox->setCurrentIndex(1);
     ui->policeBox->setCurrentIndex(1);
     ui->couleurBox->setCurrentIndex(0);
+    ui->advertisementEtapeNombre->hide();
+    ui->advertisementSuppression->hide();
+    ui->advertisementModification->hide();
 }
 
 void MainWindow::on_resetOption_clicked()
@@ -451,5 +441,14 @@ void MainWindow::on_resetOption_clicked()
 
 void MainWindow::on_numeroEtape_textChanged(const QString &arg1)
 {
-    listerResultat();
+    rechercher();
+}
+
+void MainWindow::on_stackedWidget_currentChanged(int arg1)
+{
+}
+
+void MainWindow::on_aideGestion_clicked()
+{
+    QDesktopServices::openUrl(QUrl("file:///T:/Stage/Stage_2025_ST_felixDL/Projet/Application/PROJET_AFFICHEUR_INDICE/manuel.pdf#page2",QUrl::TolerantMode));
 }
