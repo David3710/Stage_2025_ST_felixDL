@@ -87,9 +87,9 @@ void MainWindow::rechercher() // Cherche et ouvre la BDD
     {
         QSqlQuery query;
 
-        QString requete("SELECT nom, etape FROM indice ");
+        QString requete("SELECT nom as \"Nom de l'indice\", etape as \"Étape N°\" FROM indice ");
 
-        if(ui->trierEnvoiBox->currentIndex() != 0){
+        if(ui->trierEnvoiBox->currentIndex() != 0 || (ui->gestionRecherche->text().isEmpty() == false)){
             trierEnvoi(requete);
         }
         else {
@@ -107,6 +107,14 @@ void MainWindow::rechercher() // Cherche et ouvre la BDD
         }
 
         afficherResultat(query);
+
+        std::cout << ui->reponseTable->size().width() << std::endl;
+        std::cout << ui->reponseTable->columnWidth(1) << std::endl;
+        std::cout << ui->reponseTable->verticalHeader()->width() << std::endl;
+
+        //Change la taille des colonnes (bug? obligé de double recherche car la taille horizontal ne s'actualise pas directement)
+
+        ui->reponseTable->setColumnWidth(0, ui->reponseTable->size().width() - 17 - ui->reponseTable->columnWidth(1));
 
         db.close();
     }
@@ -142,6 +150,7 @@ void MainWindow::afficherResultat( QSqlQuery query ) // Affiche la BDD sur une t
 
         ligne++;
     }
+
 }
 
 void MainWindow::creerIndice() // Permet de créer un indice en choisissant son nom
@@ -189,9 +198,7 @@ void MainWindow::supprimerIndice() // Permet de supprimer un indice en le sélec
 
         QString requete("DELETE FROM indice WHERE nom = \"");
 
-        std::cout << m_nom_indice.toStdString() << std::endl;
-
-        requete.push_back(ui->reponseTable->currentItem()->text());
+        requete.push_back(ui->reponseTable->item(ui->reponseTable->currentRow(), 0)->text());
         requete.push_back("\"");
 
         std::cout << requete.toStdString() << std::endl;
@@ -208,7 +215,7 @@ void MainWindow::supprimerIndice() // Permet de supprimer un indice en le sélec
     }
 }
 
-void MainWindow::modifierIndice()
+void MainWindow::modifierIndice() // Requête SQL de modification d'un indice
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("../PROJET_AFFICHEUR_INDICE/indice.db");
@@ -243,6 +250,9 @@ void MainWindow::modifierIndice()
     }
 }
 
+//------------------------------------------------
+// Méthodes concernant le tri des indices
+
 void MainWindow::trierEnvoi(QString &requete) // Permet le tri des indices listés dans la boîte déroulante dans l'écran d'envoi d'indice
 {
 
@@ -251,11 +261,12 @@ void MainWindow::trierEnvoi(QString &requete) // Permet le tri des indices list�
         ui->numeroEtape->hide();
         requete.push_back("ORDER BY lower(nom)");
     }
-    if(ui->trierEnvoiBox->currentIndex() == 2) { // Contient un mot
+    if(ui->trierEnvoiBox->currentIndex() == 2 || ui->gestionRecherche->text().isEmpty() == false) { // Contient un mot
         ui->selectionTriage->show();
         ui->numeroEtape->hide();
         requete.push_back("WHERE nom LIKE \"%");
         requete.push_back(ui->selectionTriage->text());
+        requete.push_back(ui->gestionRecherche->text());
         requete.push_back("%\"");
     }
     if(ui->trierEnvoiBox->currentIndex() == 3) { // Commençant par...
@@ -273,8 +284,21 @@ void MainWindow::trierEnvoi(QString &requete) // Permet le tri des indices list�
         requete.push_back("'");
     }
 
+}
 
+void MainWindow::on_selectionTriage_textChanged(const QString &arg1) // Méthode qui met à jour la BDD à chaque fois que la barre de recherche du tri change
+{
+    rechercher();
+}
 
+void MainWindow::on_trierEnvoiBox_activated(const QString &arg1) // Quand l'index de la boîte déroulante de tri change
+{
+    rechercher();
+}
+
+void MainWindow::on_numeroEtape_textChanged(const QString &arg1) // // Méthode qui met à jour la BDD à chaque fois que la barre de recherche du tri change
+{
+    rechercher();
 }
 
 //------------------------------------------------
@@ -282,7 +306,9 @@ void MainWindow::trierEnvoi(QString &requete) // Permet le tri des indices list�
 
 void MainWindow::on_versGestion_clicked() // Cliquer sur le bouton "Gérer les indices"
 {
+    rechercher();
     ui->stackedWidget->setCurrentIndex(1);
+    rechercher();
     ui->advertisementSuppression->hide();
     ui->advertisementModification->hide();
 }
@@ -320,29 +346,31 @@ void MainWindow::on_backAide_clicked() // Cliquer sur le bouton retour en arriè
 //------------------------------------------------
 // Méthodes gérants l'ajout d'indices à la BDD
 
-void MainWindow::on_creerIndice_clicked()
+void MainWindow::on_creerIndice_clicked() // Quand on appui sur le bouton "Créer un indice" dans l'écran de gestion des indices
 {
     ui->stackedWidget->setCurrentIndex(4);
 }
 
-void MainWindow::wantCreerIndice() {
+void MainWindow::on_ajouterIndice_clicked() // Quand on appui sur le bouton "Créer"
+{
     creerIndice();
     ui->nouvelIndice->setText("");
+    ui->etapeNouvelIndice->setText("");
     rechercher();
     ui->stackedWidget->setCurrentIndex(1);
 }
 
-void MainWindow::on_ajouterIndice_clicked()
-{
-    wantCreerIndice();
-}
-
-void MainWindow::on_nouvelIndice_returnPressed()
+void MainWindow::on_nouvelIndice_returnPressed() // On appui sur "Entrée" dans la barre du nom du nouvel indice
 {
     on_ajouterIndice_clicked();
 }
 
-void MainWindow::on_annulerCreer_clicked()
+void MainWindow::on_etapeNouvelIndice_returnPressed() // On appui sur "Entrée" dans la barre du numéro de l'étape
+{
+    on_ajouterIndice_clicked();
+}
+
+void MainWindow::on_annulerCreer_clicked() // Quand on appui sur le bouton "Annuler"
 {
     ui->stackedWidget->setCurrentIndex(1);
 }
@@ -350,7 +378,7 @@ void MainWindow::on_annulerCreer_clicked()
 //------------------------------------------------
 // Méthodes gérants la suppression d'un indice
 
-void MainWindow::on_supprimerIndice_clicked()
+void MainWindow::on_supprimerIndice_clicked() // Quand on appui sur le bouton "Supprimer un indice" dans l'écran de gestion des indices
 {
 
     if(ui->reponseTable->currentItem() != NULL) {
@@ -366,7 +394,7 @@ void MainWindow::on_supprimerIndice_clicked()
 //------------------------------------------------
 // Méthodes gérants la modification d'un indice
 
-void MainWindow::on_modifierIndice_clicked()
+void MainWindow::on_modifierIndice_clicked() // Quand on appui sur le bouton "Modifier un indice" dans l'écran de gestion des indices
 {
 
     if(ui->reponseTable->currentItem() != NULL) {
@@ -381,7 +409,7 @@ void MainWindow::on_modifierIndice_clicked()
     }
 }
 
-void MainWindow::on_modificationIndice_clicked()
+void MainWindow::on_modificationIndice_clicked() //On clique sur le bouton "Modifier"
 {
     modifierIndice();
 
@@ -395,31 +423,38 @@ void MainWindow::on_annulerModifier_clicked()
     ui->stackedWidget->setCurrentIndex(1);
 }
 
+void MainWindow::on_indiceModifiable_returnPressed()
+{
+    on_modificationIndice_clicked();
+}
+
+void MainWindow::on_etapeModifiable_returnPressed()
+{
+    on_modificationIndice_clicked();
+}
+
 //------------------------------------------------
 // Méthode de la table d'affichage
 
-void MainWindow::on_reponseTable_cellClicked(int row, int column)
+void MainWindow::on_reponseTable_cellClicked(int row, int column) // On affiche dans la console les données de la cellule sélectionnée
 {
     std::cout << row << std::endl;
     std::cout << column << std::endl;
     std::cout << ui->reponseTable->currentItem()->text().toStdString() << std::endl;
 }
 
-void MainWindow::on_reponseTable_cellDoubleClicked(int row, int column)
+void MainWindow::on_reponseTable_cellDoubleClicked(int row, int column) // On met à jour la table quand on double clique sur la table (pour éviter l'édition manuelle des cellules)
 {
     rechercher();
 }
 
-void MainWindow::on_selectionTriage_textChanged(const QString &arg1)
+void MainWindow::on_gestionRecherche_textChanged(const QString &arg1) // Barre sur la table permettant de rechercher un indice
 {
     rechercher();
 }
 
-
-void MainWindow::on_trierEnvoiBox_activated(const QString &arg1)
-{
-    rechercher();
-}
+//------------------------------------------------
+// Méthode de remise à défaut de l'écran d'envoi
 
 void MainWindow::remettreDefaut() {
     ui->trierEnvoiBox->setCurrentIndex(0);
@@ -429,7 +464,6 @@ void MainWindow::remettreDefaut() {
     ui->vitesseDefilementBox->setCurrentIndex(1);
     ui->policeBox->setCurrentIndex(1);
     ui->couleurBox->setCurrentIndex(0);
-    ui->advertisementEtapeNombre->hide();
     ui->advertisementSuppression->hide();
     ui->advertisementModification->hide();
 }
@@ -439,21 +473,19 @@ void MainWindow::on_resetOption_clicked()
     remettreDefaut();
 }
 
-void MainWindow::on_numeroEtape_textChanged(const QString &arg1)
-{
-    rechercher();
-}
+//------------------------------------------------
+// Méthode de l'écran d'aide
 
-void MainWindow::on_stackedWidget_currentChanged(int arg1)
-{
-}
-
-void MainWindow::on_aideGestion_clicked()
+void MainWindow::on_aideGestion_clicked() // Charge le PDF à une certaine page (à faire)
 {
     QDesktopServices::openUrl(QUrl(QUrl::fromLocalFile("../PROJET_AFFICHEUR_INDICE/manuel.pdf")));
 }
 
-void MainWindow::on_aideEnvoi_clicked()
+void MainWindow::on_aideEnvoi_clicked() // Charge le PDF à une certaine page (à faire)
 {
     QDesktopServices::openUrl(QUrl(QUrl::fromLocalFile("../PROJET_AFFICHEUR_INDICE/manuel.pdf")));
 }
+
+
+
+

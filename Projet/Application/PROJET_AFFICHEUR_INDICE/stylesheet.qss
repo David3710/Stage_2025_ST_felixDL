@@ -1,8 +1,10 @@
 /* Ceci est un commentaire pour montrer la syntaxe du commentaire.*/
 
-QPushButton#backGestion {
+QPushButton#backGestion, #backEnvoi, #backAide {
 
     background-image: url(../PROJET_AFFICHEUR_INDICE/images/backArrow.png);
+    background-repeat: no-repeat;
+    background-position: center;
 
 }
 

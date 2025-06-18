@@ -24,7 +24,6 @@ private:
 
     void rechercher();
     void afficherResultat( QSqlQuery query );
-    void wantCreerIndice();
     void creerIndice();
     void supprimerIndice();
     void modifierIndice();
@@ -74,14 +73,19 @@ private slots:
 
     void on_modificationIndice_clicked();
 
-    void on_stackedWidget_currentChanged(int arg1);
-
     void on_aideGestion_clicked();
 
     void on_aideEnvoi_clicked();
 
+    void on_gestionRecherche_textChanged(const QString &arg1);
+
+    void on_etapeNouvelIndice_returnPressed();
+
+    void on_indiceModifiable_returnPressed();
+
+    void on_etapeModifiable_returnPressed();
+
 private:
-    QString m_nom_indice;
     Client m_client;
     Ui::MainWindow *ui;
 };
